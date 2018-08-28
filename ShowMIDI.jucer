@@ -83,6 +83,7 @@
   </EXPORTFORMATS>
   <LIVE_SETTINGS>
     <OSX buildEnabled="1"/>
+    <WINDOWS/>
   </LIVE_SETTINGS>
   <JUCEOPTIONS/>
 </JUCERPROJECT>
