@@ -54,6 +54,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    int keyCount;
     int lastUIWidth, lastUIHeight;
 
     float pitchBend;    // range -1.0 to +1.0, normal value 0.0

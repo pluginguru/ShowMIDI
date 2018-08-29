@@ -15,6 +15,8 @@
 KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
     : AudioProcessor (BusesProperties()) // add no audio buses at all
 {
+    keyCount = 88;
+    
     lastUIWidth = 600;
     lastUIHeight = 100;
 
@@ -78,6 +80,7 @@ AudioProcessorEditor* KeyboardPluginAudioProcessor::createEditor()
 void KeyboardPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     XmlElement xml = XmlElement("uiSize");
+    xml.setAttribute ("keyCount", keyCount);
     xml.setAttribute ("uiWidth", lastUIWidth);
     xml.setAttribute ("uiHeight", lastUIHeight);
     copyXmlToBinary(xml, destData);
@@ -86,6 +89,7 @@ void KeyboardPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 void KeyboardPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     ScopedPointer<XmlElement> xml = getXmlFromBinary(data, sizeInBytes);
+    keyCount = xml->getIntAttribute ("keyCount", keyCount);
     lastUIWidth  = xml->getIntAttribute ("uiWidth", lastUIWidth);
     lastUIHeight = xml->getIntAttribute ("uiHeight", lastUIHeight);
 }

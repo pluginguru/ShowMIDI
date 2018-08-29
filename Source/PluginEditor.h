@@ -28,6 +28,8 @@ private:
     BidirectionalSlider pitchWheel;
     UnidirectionalSlider modWheel;
 
+    TextButton size37Button, size49Button, size61Button, size88Button;
+
     ComponentBoundsConstrainer resizeLimits;
     std::unique_ptr<ResizableCornerComponent> resizer;
 

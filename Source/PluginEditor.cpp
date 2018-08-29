@@ -15,6 +15,19 @@ KeyboardPluginAudioProcessorEditor::KeyboardPluginAudioProcessorEditor (Keyboard
     addAndMakeVisible (keyboardComponent);
     keyboardComponent.setKeyWidth(30);
 
+    size37Button.setButtonText("37 keys");
+    size37Button.onClick = [this] { processor.keyCount = 37; resized(); };
+    addAndMakeVisible(size37Button);
+    size49Button.setButtonText("49 keys");
+    size49Button.onClick = [this] { processor.keyCount = 49; resized(); };
+    addAndMakeVisible(size49Button);
+    size61Button.setButtonText("61 keys");
+    size61Button.onClick = [this] { processor.keyCount = 61; resized(); };
+    addAndMakeVisible(size61Button);
+    size88Button.setButtonText("88 keys");
+    size88Button.onClick = [this] { processor.keyCount = 88; resized(); };
+    addAndMakeVisible(size88Button);
+
     resizeLimits.setSizeLimits (200, 100, 2000, 200);
     resizer.reset(new ResizableCornerComponent(this, &resizeLimits));
     addAndMakeVisible(*resizer);
@@ -32,7 +45,8 @@ KeyboardPluginAudioProcessorEditor::~KeyboardPluginAudioProcessorEditor()
 void KeyboardPluginAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+    //g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+    g.fillAll(Colours::black);
 }
 
 void KeyboardPluginAudioProcessorEditor::resized()
@@ -45,9 +59,38 @@ void KeyboardPluginAudioProcessorEditor::resized()
     pitchWheel.setBounds(area.removeFromLeft(40));
     modWheel.setBounds(area.removeFromLeft(40));
 
+    auto buttonsArea = area.removeFromRight(80);
+    buttonsArea.removeFromLeft(5);
+    int buttonHeight = (buttonsArea.getHeight() - 6) / 4;
+    if (buttonHeight > 24) buttonHeight = 24;
+    size37Button.setBounds(buttonsArea.removeFromTop(buttonHeight));
+    buttonsArea.removeFromTop(2);
+    size49Button.setBounds(buttonsArea.removeFromTop(buttonHeight));
+    buttonsArea.removeFromTop(2);
+    size61Button.setBounds(buttonsArea.removeFromTop(buttonHeight));
+    buttonsArea.removeFromTop(2);
+    size88Button.setBounds(buttonsArea.removeFromTop(buttonHeight));
+
     keyboardComponent.setBounds(area);
-    keyboardComponent.setKeyWidth(area.getWidth() / 52.0f);
-    keyboardComponent.setLowestVisibleKey(21);
+    switch (processor.keyCount)
+    {
+        case 37:
+            keyboardComponent.setKeyWidth(area.getWidth() / 22.0f);
+            keyboardComponent.setLowestVisibleKey(48);
+            break;
+        case 49:
+            keyboardComponent.setKeyWidth(area.getWidth() / 29.0f);
+            keyboardComponent.setLowestVisibleKey(36);
+            break;
+        case 61:
+            keyboardComponent.setKeyWidth(area.getWidth() / 36.0f);
+            keyboardComponent.setLowestVisibleKey(36);
+            break;
+        default:
+            keyboardComponent.setKeyWidth(area.getWidth() / 52.0f);
+            keyboardComponent.setLowestVisibleKey(21);
+           break;
+    }
 }
 
 void KeyboardPluginAudioProcessorEditor::changeListenerCallback(ChangeBroadcaster*)
