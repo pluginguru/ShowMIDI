@@ -11,6 +11,12 @@
             file="Source/BidirectionalSlider.cpp"/>
       <FILE id="Gz6ELu" name="BidirectionalSlider.h" compile="0" resource="0"
             file="Source/BidirectionalSlider.h"/>
+      <FILE id="HEBPP6" name="BooleanIndicator.cpp" compile="1" resource="0"
+            file="Source/BooleanIndicator.cpp"/>
+      <FILE id="KpjNpB" name="BooleanIndicator.h" compile="0" resource="0"
+            file="Source/BooleanIndicator.h"/>
+      <FILE id="wluBqj" name="MyMidiKeyboardComponent.h" compile="0" resource="0"
+            file="Source/MyMidiKeyboardComponent.h"/>
       <FILE id="TpEhmX" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="HHraww" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
@@ -18,6 +24,10 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="DFR52u" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="icLdct" name="SustainPedalLogic.cpp" compile="1" resource="0"
+            file="Source/SustainPedalLogic.cpp"/>
+      <FILE id="OXJl3N" name="SustainPedalLogic.hpp" compile="0" resource="0"
+            file="Source/SustainPedalLogic.hpp"/>
       <FILE id="QMkksk" name="UnidirectionalSlider.cpp" compile="1" resource="0"
             file="Source/UnidirectionalSlider.cpp"/>
       <FILE id="cxZsQQ" name="UnidirectionalSlider.h" compile="0" resource="0"

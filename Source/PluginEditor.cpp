@@ -5,6 +5,7 @@ KeyboardPluginAudioProcessorEditor::KeyboardPluginAudioProcessorEditor (Keyboard
                                                                         MidiKeyboardState& keyboardState)
     : AudioProcessorEditor (&p), processor (p)
     , keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    , pedalDown(false)
 {
     addAndMakeVisible(pitchWheel);
     pitchWheel.setValue(processor.pitchBend);
@@ -12,8 +13,11 @@ KeyboardPluginAudioProcessorEditor::KeyboardPluginAudioProcessorEditor (Keyboard
     addAndMakeVisible(modWheel);
     modWheel.setValue(processor.modWheel);
 
-    addAndMakeVisible (keyboardComponent);
-    keyboardComponent.setKeyWidth(30);
+    addAndMakeVisible(keyboardComponent);
+    //keyboardComponent.setKeyWidth(30);
+
+    addAndMakeVisible(sustainPedal);
+    sustainPedal.setValue(0);
 
     size37Button.setButtonText("37 keys");
     size37Button.onClick = [this] { processor.keyCount = 37; resized(); };
@@ -71,6 +75,9 @@ void KeyboardPluginAudioProcessorEditor::resized()
     buttonsArea.removeFromTop(2);
     size88Button.setBounds(buttonsArea.removeFromTop(buttonHeight));
 
+    sustainPedal.setBounds(area.removeFromBottom(6));
+    area.removeFromBottom(2);
+
     keyboardComponent.setBounds(area);
     switch (processor.keyCount)
     {
@@ -95,6 +102,11 @@ void KeyboardPluginAudioProcessorEditor::resized()
 
 void KeyboardPluginAudioProcessorEditor::changeListenerCallback(ChangeBroadcaster*)
 {
+    sustainPedal.setValue(processor.sustainPedalDown);
+    if (processor.sustainPedalDown && !pedalDown) keyboardComponent.pedalDown();
+    else if (!processor.sustainPedalDown && pedalDown) keyboardComponent.pedalUp();
+    pedalDown = processor.sustainPedalDown;
+
     pitchWheel.setValue(processor.pitchBend);
     modWheel.setValue(processor.modWheel);
 }

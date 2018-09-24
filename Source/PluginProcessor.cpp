@@ -15,7 +15,7 @@
 KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
     : AudioProcessor (BusesProperties()) // add no audio buses at all
 {
-    keyCount = 88;
+    keyCount = 61;
     
     lastUIWidth = 600;
     lastUIHeight = 100;
@@ -58,9 +58,30 @@ void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
             modWheel = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
-        else
+        else if (msg.isControllerOfType(64))
         {
-            keyboardState.processNextMidiEvent(msg);
+            sustainPedalDown = msg.getControllerValue() > 63.0f;
+            sendChangeMessage();
+            if (sustainPedalDown) pedalLogic.pedalDown();
+            else
+            {
+                pedalLogic.pedalUp();
+                for (int nn = 0; nn < 128; nn++)
+                {
+                    if (pedalLogic.isNoteSustaining(nn))
+                        keyboardState.noteOff(msg.getChannel(), nn, 0);
+                }
+            }
+        }
+        else if (msg.isNoteOn())
+        {
+            pedalLogic.keyDownAction(msg.getNoteNumber());
+            keyboardState.noteOn(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity());
+        }
+        else if (msg.isNoteOff())
+        {
+            if (pedalLogic.keyUpAction(msg.getNoteNumber()))
+                keyboardState.noteOff(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity());
         }
     }
 }

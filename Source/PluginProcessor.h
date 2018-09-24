@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "SustainPedalLogic.hpp"
 
 //==============================================================================
 /**
@@ -59,9 +60,11 @@ public:
 
     float pitchBend;    // range -1.0 to +1.0, normal value 0.0
     float modWheel;     // range 0.0 to 1.0
+    bool sustainPedalDown;
 
 private:
     MidiKeyboardState keyboardState;
+    AudioKitCore::SustainPedalLogic pedalLogic;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardPluginAudioProcessor)
