@@ -13,7 +13,7 @@
 
 //==============================================================================
 KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
-    : AudioProcessor (BusesProperties()) // add no audio buses at all
+    : AudioProcessor(BusesProperties().withOutput("Output", AudioChannelSet::stereo(), true))
 {
     keyCount = 61;
     
@@ -39,10 +39,21 @@ void KeyboardPluginAudioProcessor::releaseResources()
     // spare memory, etc.
 }
 
+bool KeyboardPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
+{
+    // This is the place where you check if the layout is supported.
+    // In this template code we only support mono or stereo.
+    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
+        && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+        return false;
+
+    return true;
+}
+
 void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midi)
 {
-    // the audio buffer in a midi effect will have zero channels!
-    jassert (buffer.getNumChannels() == 0);
+    for (auto i = 0; i < getTotalNumOutputChannels(); ++i)
+        buffer.clear(i, 0, buffer.getNumSamples());
 
     MidiMessage msg;
     int ignore;
@@ -76,12 +87,12 @@ void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
         else if (msg.isNoteOn())
         {
             pedalLogic.keyDownAction(msg.getNoteNumber());
-            keyboardState.noteOn(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity());
+            keyboardState.noteOn(msg.getChannel(), msg.getNoteNumber(), msg.getFloatVelocity());
         }
         else if (msg.isNoteOff())
         {
             if (pedalLogic.keyUpAction(msg.getNoteNumber()))
-                keyboardState.noteOff(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity());
+                keyboardState.noteOff(msg.getChannel(), msg.getNoteNumber(), msg.getFloatVelocity());
         }
     }
 }

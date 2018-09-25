@@ -28,10 +28,11 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
+    bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
     void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
     //==============================================================================
-    bool isMidiEffect() const override                     { return true; }
+    bool isMidiEffect() const override                     { return false; }
 
     //==============================================================================
     AudioProcessorEditor* createEditor() override;
