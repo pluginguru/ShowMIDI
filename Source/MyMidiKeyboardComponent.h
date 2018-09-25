@@ -5,7 +5,9 @@ class MyMidiKeyboardComponent : public MidiKeyboardComponent
 {
 public:
     MyMidiKeyboardComponent (MidiKeyboardState& state, Orientation orientation)
-    : MidiKeyboardComponent(state, orientation) { pedalUp(); }
+    : MidiKeyboardComponent(state, orientation) {
+        setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::mediumturquoise);
+    }
     
     void mouseMove (const MouseEvent &) override {}
     void mouseDrag (const MouseEvent &) override {}
@@ -16,10 +18,10 @@ public:
     void mouseWheelMove (const MouseEvent &, const MouseWheelDetails &) override {}
 
     void pedalDown() {
-        setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::violet);
+        //setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::violet);
     }
     void pedalUp() {
-        setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::mediumturquoise);
+        //setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::mediumturquoise);
     }
 
 private:

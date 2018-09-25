@@ -4,7 +4,7 @@ void BooleanIndicator::paint (Graphics& g)
 {
     auto area = getLocalBounds();
 
-    g.setColour(value ? Colours::violet : Colours::black);
+    g.setColour(value ? Colours::mediumturquoise : Colours::black);
     g.fillRect(area);
 }
 
