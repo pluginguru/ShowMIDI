@@ -9,3 +9,11 @@ On the Mac, put the *.component* file in *~/Library/Audio/Plug-Ins/Components*, 
 On the Mac, put the *.vst* file in *~/Library/Audio/Plug-Ins/VST*.
 
 On Windows, put the *.dll* file wherever your VST host program looks for plug-ins.
+
+## Cubase
+ShowMIDI is a "MIDI insert effect". It doesn't produce any sound; it simply receives incoming MIDI data, displays the result, and passes it on. Most DAWs allow you to use MIDI insert effect plug-ins, but **Cubase is a notable exception**. Cubase provides a handful of its own MIDI insert effects, and these are the only ones you're allowed to use. [People have been begging Steinberg to support "third-party" MIDI insert effects](https://www.steinberg.net/forums/viewtopic.php?t=111740) for years, to no effect.
+
+For this reason, I created a "VSTi" version of *ShowMIDI*, which pretends to be an ordinary synthesizer plug-in, but doesn't create any sound. In Cubase, you can load this version of the plug-in onto an Instrument track, then just make sure that track's *Record Enable* is set at the same time as whatever other track(s) you're actually recording on, and all will be well.
+
+  * [Click here to download link ShowMIDI_S](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_S.zip) (64-bit Windows VST *.dll* only)
+
