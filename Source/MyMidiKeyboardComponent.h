@@ -18,10 +18,10 @@ public:
     void mouseWheelMove (const MouseEvent &, const MouseWheelDetails &) override {}
 
     void pedalDown() {
-        //setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::violet);
+        setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::violet);
     }
     void pedalUp() {
-        //setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::mediumturquoise);
+        setColour(MidiKeyboardComponent::keyDownOverlayColourId, Colours::mediumturquoise);
     }
 
 private:
