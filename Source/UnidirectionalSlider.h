@@ -5,7 +5,7 @@
 class UnidirectionalSlider	: public Component
 {
 public:
-    UnidirectionalSlider() : value(0.0f) {}
+    UnidirectionalSlider(Colour c) : colour(c), value(0.0f) {}
     virtual ~UnidirectionalSlider() = default;
 
 	// Component
@@ -15,5 +15,6 @@ public:
 	void setValue(float v);
 
 private:
-	float value;
+    Colour colour;
+    float value;
 };

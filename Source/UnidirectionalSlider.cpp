@@ -10,7 +10,7 @@ void UnidirectionalSlider::paint (Graphics& g)
 
     if (value > 0.0f)
     {
-        g.setColour(Colours::lightgreen);
+        g.setColour(colour);
         Rectangle<int> bar(area.getX(),
                            area.getY() + int((1.0f - value) * area.getHeight()),
                            area.getWidth(),

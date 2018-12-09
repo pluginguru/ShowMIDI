@@ -22,6 +22,14 @@ KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
 
     pitchBend = 0.0f;
     modWheel = 0.0f;
+
+#ifdef AIRWAVE_VERSION
+    breathController = 0.0f;
+    footController = 0.0f;
+    softPedal = 0.0f;
+#endif
+
+    sustainPedalDown = false;
 }
 
 KeyboardPluginAudioProcessor::~KeyboardPluginAudioProcessor()
@@ -58,6 +66,23 @@ void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
             modWheel = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
+#ifdef AIRWAVE_VERSION
+        else if (msg.isControllerOfType(2))
+        {
+            breathController = msg.getControllerValue() / 127.0f;
+            sendChangeMessage();
+        }
+        else if (msg.isControllerOfType(4))
+        {
+            footController = msg.getControllerValue() / 127.0f;
+            sendChangeMessage();
+        }
+        else if (msg.isControllerOfType(67))
+        {
+            softPedal = msg.getControllerValue() / 127.0f;
+            sendChangeMessage();
+        }
+#endif
         else if (msg.isControllerOfType(64))
         {
             sustainPedalDown = msg.getControllerValue() > 63.0f;
@@ -76,12 +101,12 @@ void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
         else if (msg.isNoteOn())
         {
             pedalLogic.keyDownAction(msg.getNoteNumber());
-            keyboardState.noteOn(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity());
+            keyboardState.noteOn(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity() / 127.0f);
         }
         else if (msg.isNoteOff())
         {
             if (pedalLogic.keyUpAction(msg.getNoteNumber()))
-                keyboardState.noteOff(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity());
+                keyboardState.noteOff(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity() / 127.0f);
         }
     }
 }

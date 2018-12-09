@@ -60,6 +60,9 @@ public:
 
     float pitchBend;    // range -1.0 to +1.0, normal value 0.0
     float modWheel;     // range 0.0 to 1.0
+#ifdef AIRWAVE_VERSION
+    float breathController, footController, softPedal;
+#endif
     bool sustainPedalDown;
 
 private:

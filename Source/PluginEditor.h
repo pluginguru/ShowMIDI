@@ -30,6 +30,9 @@ private:
     BooleanIndicator sustainPedal;
     BidirectionalSlider pitchWheel;
     UnidirectionalSlider modWheel;
+#ifdef AIRWAVE_VERSION
+    UnidirectionalSlider breathController, footController, softPedal;
+#endif
 
     TextButton size37Button, size49Button, size61Button, size88Button;
 

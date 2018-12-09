@@ -3,8 +3,15 @@
 
 KeyboardPluginAudioProcessorEditor::KeyboardPluginAudioProcessorEditor (KeyboardPluginAudioProcessor& p,
                                                                         MidiKeyboardState& keyboardState)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor(&p)
+    , processor(p)
     , keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
+    , modWheel(Colours::darkorange)
+#ifdef AIRWAVE_VERSION
+    , breathController(Colours::hotpink)
+    , footController(Colours::cyan)
+    , softPedal(Colours::greenyellow)
+#endif
     , pedalDown(false)
 {
     addAndMakeVisible(pitchWheel);
@@ -13,11 +20,21 @@ KeyboardPluginAudioProcessorEditor::KeyboardPluginAudioProcessorEditor (Keyboard
     addAndMakeVisible(modWheel);
     modWheel.setValue(processor.modWheel);
 
+#ifdef AIRWAVE_VERSION
+    addAndMakeVisible(breathController);
+    breathController.setValue(processor.breathController);
+
+    addAndMakeVisible(footController);
+    footController.setValue(processor.footController);
+
+    addAndMakeVisible(softPedal);
+    softPedal.setValue(processor.softPedal);
+#endif
+
     addAndMakeVisible(keyboardComponent);
-    //keyboardComponent.setKeyWidth(30);
 
     addAndMakeVisible(sustainPedal);
-    sustainPedal.setValue(0);
+    sustainPedal.setValue(processor.sustainPedalDown);
 
     size37Button.setButtonText("37 keys");
     size37Button.onClick = [this] { processor.keyCount = 37; resized(); };
@@ -62,6 +79,11 @@ void KeyboardPluginAudioProcessorEditor::resized()
     auto area = getLocalBounds();
     pitchWheel.setBounds(area.removeFromLeft(40));
     modWheel.setBounds(area.removeFromLeft(40));
+#ifdef AIRWAVE_VERSION
+    breathController.setBounds(area.removeFromLeft(40));
+    footController.setBounds(area.removeFromLeft(40));
+    softPedal.setBounds(area.removeFromLeft(40));
+#endif
 
     auto buttonsArea = area.removeFromRight(80);
     buttonsArea.removeFromLeft(5);
@@ -109,4 +131,10 @@ void KeyboardPluginAudioProcessorEditor::changeListenerCallback(ChangeBroadcaste
 
     pitchWheel.setValue(processor.pitchBend);
     modWheel.setValue(processor.modWheel);
+
+#ifdef AIRWAVE_VERSION
+    breathController.setValue(processor.breathController);
+    footController.setValue(processor.footController);
+    softPedal.setValue(processor.softPedal);
+#endif
 }

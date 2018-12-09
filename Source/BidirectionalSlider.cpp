@@ -10,7 +10,7 @@ void BidirectionalSlider::paint (Graphics& g)
 
     if (value > 0.0f)
     {
-        g.setColour(Colours::lightcyan);
+        g.setColour(Colours::lime);
         Rectangle<int> bar(area.getX(),
                            area.getY() + int((1.0f - value) * 0.5f * area.getHeight()),
                            area.getWidth(),
@@ -19,7 +19,7 @@ void BidirectionalSlider::paint (Graphics& g)
     }
     else if (value < 0.0f)
     {
-        g.setColour(Colours::lightyellow);
+        g.setColour(Colours::red);
         Rectangle<int> bar(area.getX(),
                            area.getY() + int(0.5f * area.getHeight()),
                            area.getWidth(),
