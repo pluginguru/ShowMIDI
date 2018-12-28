@@ -51,7 +51,8 @@
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX">
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK"
+               vst3Folder="~/SDKs/VST_SDK/VST3_SDK">
       <CONFIGURATIONS>
         <CONFIGURATIONS name="Debug" isDebug="1" optimisation="1" targetName="ShowMIDIAW"/>
         <CONFIGURATIONS name="Release" isDebug="0" optimisation="3" targetName="ShowMIDIAW"/>
