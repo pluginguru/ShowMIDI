@@ -2,9 +2,10 @@
 
 <JUCERPROJECT name="ShowMIDI" companyName="JUCE" version="1.0.0" userNotes="Keyboard monitoring audio plugin."
               companyWebsite="http://juce.com" projectType="audioplug" pluginManufacturer="Shane Dunne"
-              pluginFormats="buildAU,buildVST" pluginCharacteristicsValue="pluginIsMidiEffectPlugin"
+              pluginFormats="buildAU,buildVST,buildVST3" pluginCharacteristicsValue="pluginIsMidiEffectPlugin"
               id="sg2UQw" jucerVersion="5.4.1" pluginManufacturerCode="DunA"
-              pluginCode="Smdi" aaxIdentifier="com.getdunne.ShowMIDI">
+              pluginCode="Smdi" aaxIdentifier="com.getdunne.ShowMIDI" reportAppUsage="0"
+              displaySplashScreen="0">
   <MAINGROUP id="oYQ3GO" name="ShowMIDI">
     <GROUP id="{C53FD417-9AA1-3BDF-D69C-6C7D69B5CA84}" name="Source">
       <FILE id="SV2Eur" name="BidirectionalSlider.cpp" compile="1" resource="0"
