@@ -1,14 +1,14 @@
 # Prebuilt
 Here you'll find pre-built plug-ins (click links to download):
- * [ShowMIDI_MacAU_64.zip](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_MacAU_64.zip) Audio Unit (Mac *.component* file), 64-bit
- * [ShowMIDI_MacVST_64.zip](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_MacVST_64.zip) VST (v2, Mac *.vst* file), 64-bit
- * [ShowMIDI_WinVST.zip](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_WinVST.zip) VST(v2, Windows *.dll* files), 32- and 64-bit
+ * [ShowMIDI_MacAU_64.zip](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_Mac.zip) (AU, VST, VST3) for Macintosh
+ * [ShowMIDI_MacVST_64.zip](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_MacVST_64.zip) (VST, VST3) for Windows, 64-bit
+ * [ShowMIDI_WinVST.zip](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_WinVST.zip) (VST, VST3) for Windows, 32-bit
 
-On the Mac, put the *.component* file in *~/Library/Audio/Plug-Ins/Components*, and note with recent versions of macOS *you must log out and back in again* before the plug-in will be visible to Logic Pro X and other Audio-Unit hosts.
+All three files contain both the basic *ShowMIDI* plug-in, plus the "AW" (Airwave) versions which feature addtional indicators for CC2, CC4, and CC67 as used in the [PlugInGuru "Airwave V3" libraries for Omnisphere 2](https://www.pluginguru.com/products/airwave-v3/).
 
-On the Mac, put the *.vst* file in *~/Library/Audio/Plug-Ins/VST*.
+On the Mac, put the plug-in files into the appropriate sub-folders inside *~/Library/Audio/Plug-Ins*. Note with recent versions of macOS, *you must log out and back in again* before the plug-ins will be visible to Logic Pro X and other hosts.
 
-On Windows, put the *.dll* file wherever your VST host program looks for plug-ins.
+On Windows, put the *.dll* and/or *.vst3* files wherever your DAW looks for plug-ins. Refer to your particular DAW's documentation for details.
 
 ## Cubase
 ShowMIDI is a "MIDI insert effect". It doesn't produce any sound; it simply receives incoming MIDI data, displays the result, and passes it on. Most DAWs allow you to use MIDI insert effect plug-ins, but **Cubase is a notable exception**. Cubase provides a handful of its own MIDI insert effects, and these are the only ones you're allowed to use. [People have been begging Steinberg to support "third-party" MIDI insert effects](https://www.steinberg.net/forums/viewtopic.php?t=111740) for years, to no effect.
@@ -17,3 +17,4 @@ For this reason, I created a "VSTi" version of *ShowMIDI*, which pretends to be 
 
   * [Click here to download link ShowMIDI_S](https://github.com/getdunne/ShowMIDI/raw/master/Prebuilt/ShowMIDI_S.zip) (64-bit Windows VST *.dll* only)
 
+There is no "S" version of the *ShowMIDI_AW*. If you need a tool to ensure that you are receiving the correct MIDI CC messages, use [Cubase's built-in MIDI Monitor plug-in](https://steinberg.help/cubase_plugin_reference/v9/en/_shared/topics/plug_ref/midi_monitor_r.html).
