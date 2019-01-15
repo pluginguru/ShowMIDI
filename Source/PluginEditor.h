@@ -17,6 +17,7 @@ public:
     // Component
     void paint (Graphics&) override;
     void resized() override;
+    void mouseDown(const MouseEvent&) override;
 
     // ChangeListener
     void changeListenerCallback(ChangeBroadcaster*) override;
@@ -30,16 +31,15 @@ private:
     BooleanIndicator sustainPedal;
     BidirectionalSlider pitchWheel;
     UnidirectionalSlider modWheel;
-#ifdef AIRWAVE_VERSION
     UnidirectionalSlider breathController, footController, softPedal;
-#endif
 
-    TextButton size37Button, size49Button, size61Button, size88Button;
+    TextButton keyboardButton, ccButton;
 
     ComponentBoundsConstrainer resizeLimits;
     std::unique_ptr<ResizableCornerComponent> resizer;
 
     bool pedalDown;
+    int ccCount;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardPluginAudioProcessorEditor)
 };

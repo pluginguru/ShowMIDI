@@ -16,6 +16,11 @@ KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
     : AudioProcessor (BusesProperties()) // add no audio buses at all
 {
     keyCount = 61;
+    ccCount = 2;
+    cc1 = 1;
+    cc2 = 2;
+    cc3 = 4;
+    cc4 = 67;
     
     lastUIWidth = 600;
     lastUIHeight = 100;
@@ -23,17 +28,21 @@ KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
     pitchBend = 0.0f;
     modWheel = 0.0f;
 
-#ifdef AIRWAVE_VERSION
     breathController = 0.0f;
     footController = 0.0f;
     softPedal = 0.0f;
-#endif
 
     sustainPedalDown = false;
 }
 
 KeyboardPluginAudioProcessor::~KeyboardPluginAudioProcessor()
 {
+}
+
+bool KeyboardPluginAudioProcessor::isVST() const
+{
+    return wrapperType == WrapperType::wrapperType_VST ||
+        wrapperType == WrapperType::wrapperType_VST3;
 }
 
 //==============================================================================
@@ -61,28 +70,26 @@ void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
             pitchBend = float(msg.getPitchWheelValue() - 8192) / 8192.0f;
             sendChangeMessage();
         }
-        else if (msg.isControllerOfType(1))
+        else if (msg.isControllerOfType(cc1))
         {
             modWheel = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
-#ifdef AIRWAVE_VERSION
-        else if (msg.isControllerOfType(2))
+        else if (msg.isControllerOfType(cc2))
         {
             breathController = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
-        else if (msg.isControllerOfType(4))
+        else if (msg.isControllerOfType(cc3))
         {
             footController = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
-        else if (msg.isControllerOfType(67))
+        else if (msg.isControllerOfType(cc4))
         {
             softPedal = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
-#endif
         else if (msg.isControllerOfType(64))
         {
             sustainPedalDown = msg.getControllerValue() > 63.0f;
@@ -126,18 +133,28 @@ AudioProcessorEditor* KeyboardPluginAudioProcessor::createEditor()
 void KeyboardPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     XmlElement xml = XmlElement("uiSize");
-    xml.setAttribute ("keyCount", keyCount);
-    xml.setAttribute ("uiWidth", lastUIWidth);
-    xml.setAttribute ("uiHeight", lastUIHeight);
+    xml.setAttribute("keyCount", keyCount);
+    xml.setAttribute("ccCount", ccCount);
+    xml.setAttribute("cc1", cc1);
+    xml.setAttribute("cc2", cc2);
+    xml.setAttribute("cc3", cc3);
+    xml.setAttribute("cc4", cc4);
+    xml.setAttribute("uiWidth", lastUIWidth);
+    xml.setAttribute("uiHeight", lastUIHeight);
     copyXmlToBinary(xml, destData);
 }
 
 void KeyboardPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     ScopedPointer<XmlElement> xml = getXmlFromBinary(data, sizeInBytes);
-    keyCount = xml->getIntAttribute ("keyCount", keyCount);
-    lastUIWidth  = xml->getIntAttribute ("uiWidth", lastUIWidth);
-    lastUIHeight = xml->getIntAttribute ("uiHeight", lastUIHeight);
+    keyCount = xml->getIntAttribute("keyCount", keyCount);
+    ccCount = xml->getIntAttribute("ccCount", ccCount);
+    cc1 = xml->getIntAttribute("cc1", cc1);
+    cc2 = xml->getIntAttribute("cc2", cc2);
+    cc3 = xml->getIntAttribute("cc3", cc3);
+    cc4 = xml->getIntAttribute("cc4", cc4);
+    lastUIWidth  = xml->getIntAttribute("uiWidth", lastUIWidth);
+    lastUIHeight = xml->getIntAttribute("uiHeight", lastUIHeight);
 }
 
 //==============================================================================

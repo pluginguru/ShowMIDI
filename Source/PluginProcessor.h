@@ -30,6 +30,8 @@ public:
 
     void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
+    bool isVST() const;
+
     //==============================================================================
     bool isMidiEffect() const override                     { return true; }
 
@@ -55,14 +57,14 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    int keyCount;
+    int keyCount;       // number of keys displayed on keyboard
+    int ccCount;        // number of CC indicators (1st one is pitch bend)
     int lastUIWidth, lastUIHeight;
+    int cc1, cc2, cc3, cc4;
 
     float pitchBend;    // range -1.0 to +1.0, normal value 0.0
     float modWheel;     // range 0.0 to 1.0
-#ifdef AIRWAVE_VERSION
     float breathController, footController, softPedal;
-#endif
     bool sustainPedalDown;
 
 private:

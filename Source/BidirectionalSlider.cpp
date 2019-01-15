@@ -4,9 +4,10 @@ void BidirectionalSlider::paint (Graphics& g)
 {
     auto area = getLocalBounds();
 
-    g.setColour(Colours::black);
-    g.fillRect(area);
-    area.reduce(5, 0);
+    //g.setColour(Colours::black);
+    //g.fillRect(area);
+
+    area.reduce(1, 1);
 
     if (value > 0.0f)
     {
