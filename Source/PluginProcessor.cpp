@@ -1,19 +1,18 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
-KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
-    : AudioProcessor (BusesProperties()) // add no audio buses at all
+AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+{
+    return new ShowMidiProcessor();
+}
+
+AudioProcessorEditor* ShowMidiProcessor::createEditor()
+{
+    return new ShowMidiEditor(*this, keyboardState);
+}
+
+ShowMidiProcessor::ShowMidiProcessor()
+    : AudioProcessor (BusesProperties())
 {
     keyCount = 61;
     ccCount = 2;
@@ -23,7 +22,7 @@ KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
     cc4 = 67;
     
     lastUIWidth = 600;
-    lastUIHeight = 100;
+    lastUIHeight = 80;
 
     pitchBend = 0.0f;
     modWheel = 0.0f;
@@ -35,36 +34,17 @@ KeyboardPluginAudioProcessor::KeyboardPluginAudioProcessor()
     sustainPedalDown = false;
 }
 
-KeyboardPluginAudioProcessor::~KeyboardPluginAudioProcessor()
-{
-}
-
-bool KeyboardPluginAudioProcessor::isVST() const
+bool ShowMidiProcessor::isVST() const
 {
     return wrapperType == WrapperType::wrapperType_VST ||
-        wrapperType == WrapperType::wrapperType_VST3;
+           wrapperType == WrapperType::wrapperType_VST3;
 }
 
-//==============================================================================
-void KeyboardPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void ShowMidiProcessor::processBlock (AudioBuffer<float>&, MidiBuffer& midi)
 {
-}
-
-void KeyboardPluginAudioProcessor::releaseResources()
-{
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
-}
-
-void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midi)
-{
-    // the audio buffer in a midi effect will have zero channels!
-    jassert (buffer.getNumChannels() == 0);
-
-    MidiMessage msg;
-    int ignore;
-    for (MidiBuffer::Iterator it (midi); it.getNextEvent (msg, ignore);)
+    for (auto md : midi)
     {
+        auto msg = md.getMessage();
         if (msg.isPitchWheel())
         {
             pitchBend = float(msg.getPitchWheelValue() - 8192) / 8192.0f;
@@ -118,19 +98,7 @@ void KeyboardPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
     }
 }
 
-//==============================================================================
-bool KeyboardPluginAudioProcessor::hasEditor() const
-{
-    return true; // (change this to false if you choose to not supply an editor)
-}
-
-AudioProcessorEditor* KeyboardPluginAudioProcessor::createEditor()
-{
-    return new KeyboardPluginAudioProcessorEditor (*this, keyboardState);
-}
-
-//==============================================================================
-void KeyboardPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
+void ShowMidiProcessor::getStateInformation (MemoryBlock& destData)
 {
     XmlElement xml = XmlElement("uiSize");
     xml.setAttribute("keyCount", keyCount);
@@ -144,9 +112,9 @@ void KeyboardPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
     copyXmlToBinary(xml, destData);
 }
 
-void KeyboardPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void ShowMidiProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    ScopedPointer<XmlElement> xml = getXmlFromBinary(data, sizeInBytes);
+    auto xml = getXmlFromBinary(data, sizeInBytes);
     keyCount = xml->getIntAttribute("keyCount", keyCount);
     ccCount = xml->getIntAttribute("ccCount", ccCount);
     cc1 = xml->getIntAttribute("cc1", cc1);
@@ -155,11 +123,4 @@ void KeyboardPluginAudioProcessor::setStateInformation (const void* data, int si
     cc4 = xml->getIntAttribute("cc4", cc4);
     lastUIWidth  = xml->getIntAttribute("uiWidth", lastUIWidth);
     lastUIHeight = xml->getIntAttribute("uiHeight", lastUIHeight);
-}
-
-//==============================================================================
-// This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new KeyboardPluginAudioProcessor();
 }

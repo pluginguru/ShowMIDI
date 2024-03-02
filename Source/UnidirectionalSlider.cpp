@@ -48,11 +48,12 @@ void UnidirectionalSlider::mouseDown(const MouseEvent& evt)
                 controllerNameString += " " + String(controllerName);
             menu.addItem(cn + 1, controllerNameString);
         }
-        int id = menu.show();
-        if (id)
-        {
-            ccNumber = id - 1;
-            repaint();
-        }
+        menu.showMenuAsync(PopupMenu::Options(), [this](int id) {
+            if (id)
+            {
+                ccNumber = id - 1;
+                repaint();
+            }
+            });
     }
 }

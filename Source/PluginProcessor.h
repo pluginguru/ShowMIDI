@@ -1,61 +1,38 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #pragma once
+#include <JuceHeader.h>
+#include "SustainPedalLogic.h"
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "SustainPedalLogic.hpp"
-
-//==============================================================================
-/**
-*/
-class KeyboardPluginAudioProcessor  : public AudioProcessor
-                                    , public ChangeBroadcaster
+class ShowMidiProcessor : public AudioProcessor
+                        , public ChangeBroadcaster
 {
 public:
-    //==============================================================================
-    KeyboardPluginAudioProcessor();
-    ~KeyboardPluginAudioProcessor();
+    ShowMidiProcessor();
 
-    //==============================================================================
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
-    void releaseResources() override;
+    // AudioProcessor
+    bool isMidiEffect() const override { return true; }
+    const String getName() const override { return "ShowMIDI"; }
+    bool acceptsMidi() const override { return true; }
+    bool producesMidi() const override { return true; }
+    double getTailLengthSeconds() const override { return 0.0; }
 
+    int getNumPrograms() override { return 1; }
+    int getCurrentProgram() override { return 0; }
+    void setCurrentProgram (int) override {}
+    const String getProgramName (int) override { return {}; }
+    void changeProgramName (int, const String&) override {}
+
+    bool hasEditor() const override { return true; }
+    AudioProcessorEditor* createEditor() override;
+
+    void prepareToPlay(double, int) override {}
+    void releaseResources() override {}
     void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
-    bool isVST() const;
-
-    //==============================================================================
-    bool isMidiEffect() const override                     { return true; }
-
-    //==============================================================================
-    AudioProcessorEditor* createEditor() override;
-    bool hasEditor() const override;
-
-    //==============================================================================
-    const String getName() const override                  { return "Keyboard"; }
-
-    bool acceptsMidi() const override                      { return true; }
-    bool producesMidi() const override                     { return true; }
-    double getTailLengthSeconds() const override           { return 0; }
-
-    //==============================================================================
-    int getNumPrograms() override                          { return 1; }
-    int getCurrentProgram() override                       { return 0; }
-    void setCurrentProgram (int) override                  {}
-    const String getProgramName (int) override             { return {}; }
-    void changeProgramName (int, const String&) override   {}
-
-    //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+
+    // ShowMidiProcessor
+    bool isVST() const;
 
     int keyCount;       // number of keys displayed on keyboard
     int ccCount;        // number of CC indicators (1st one is pitch bend)
@@ -67,10 +44,10 @@ public:
     float breathController, footController, softPedal;
     bool sustainPedalDown;
 
-private:
+protected:
     MidiKeyboardState keyboardState;
-    AudioKitCore::SustainPedalLogic pedalLogic;
+    SustainPedalLogic pedalLogic;
 
-    //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardPluginAudioProcessor)
+private:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShowMidiProcessor)
 };

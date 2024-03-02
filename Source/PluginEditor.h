@@ -1,31 +1,28 @@
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "UnidirectionalSlider.h"
 #include "BidirectionalSlider.h"
 #include "BooleanIndicator.h"
 #include "MyMidiKeyboardComponent.h"
 
-class KeyboardPluginAudioProcessorEditor    : public AudioProcessorEditor
-                                            , public ChangeListener
+class ShowMidiEditor    : public AudioProcessorEditor
+                        , public ChangeListener
 {
 public:
-    KeyboardPluginAudioProcessorEditor (KeyboardPluginAudioProcessor&, MidiKeyboardState&);
-    ~KeyboardPluginAudioProcessorEditor();
+    ShowMidiEditor (ShowMidiProcessor&, MidiKeyboardState&);
+    ~ShowMidiEditor();
 
     // Component
     void paint (Graphics&) override;
     void resized() override;
-    void mouseDown(const MouseEvent&) override;
 
     // ChangeListener
     void changeListenerCallback(ChangeBroadcaster*) override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    KeyboardPluginAudioProcessor& processor;
+    ShowMidiProcessor& processor;
     
     MyMidiKeyboardComponent keyboardComponent;
     BooleanIndicator sustainPedal;
@@ -41,5 +38,5 @@ private:
     bool pedalDown;
     int ccCount;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeyboardPluginAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShowMidiEditor)
 };

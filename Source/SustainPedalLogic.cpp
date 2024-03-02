@@ -1,66 +1,112 @@
-//
-//  SustainPedalLogic.cpp
-//  AudioKit Core
-//
-//  Created by Shane Dunne, revision history on Github.
-//  Copyright © 2018 AudioKit. All rights reserved.
-//
+#include "SustainPedalLogic.h"
 
-#include "SustainPedalLogic.hpp"
-
-namespace AudioKitCore
+SustainPedalLogic::SustainPedalLogic()
 {
+    clear();
+}
 
-    SustainPedalLogic::SustainPedalLogic()
+void SustainPedalLogic::clear()
+{
+    for (int i = 0; i < kMidiNoteNumbers; i++)
     {
-        for (int i=0; i < kMidiNoteNumbers; i++) keyDown[i] = isPlaying[i] = false;
-        pedalIsDown = false;
+        keyDown.reset(i);
+        isPlaying.reset(i);
     }
+    pedalIsDown = false;
+}
+
+void SustainPedalLogic::clearSustainingNotes()
+{
+    for (int i = 0; i < kMidiNoteNumbers; i++)
+        if (isPlaying.test(i) && !keyDown.test(i)) isPlaying.reset(i);
+}
+
+bool SustainPedalLogic::keyDownAction(int noteNumber)
+{
+    bool noteShouldStopBeforePlayingAgain = false;
     
-    bool SustainPedalLogic::keyDownAction(unsigned noteNumber)
+    if (pedalIsDown && isPlaying.test(noteNumber))
+        noteShouldStopBeforePlayingAgain = true;
+    
+    keyDown.set(noteNumber);
+    isPlaying.set(noteNumber);
+    return noteShouldStopBeforePlayingAgain;
+}
+
+bool SustainPedalLogic::keyUpAction(int noteNumber)
+{
+    bool noteShouldStop = false;
+    
+    if (!pedalIsDown)
     {
-        bool noteShouldStopBeforePlayingAgain = false;
-        
-        if (pedalIsDown && keyDown[noteNumber])
-            noteShouldStopBeforePlayingAgain = true;
-        else
-            keyDown[noteNumber] = true;
-        
-        isPlaying[noteNumber] = true;
-        return noteShouldStopBeforePlayingAgain;
+        noteShouldStop = true;
+        isPlaying.reset(noteNumber);
     }
-    
-    bool SustainPedalLogic::keyUpAction(unsigned noteNumber)
-    {
-        bool noteShouldStop = false;
-        
-        if (!pedalIsDown)
-        {
-            noteShouldStop = true;
-            isPlaying[noteNumber] = false;
+    keyDown.reset(noteNumber);
+    return noteShouldStop;
+}
+
+bool SustainPedalLogic::isNoteSustaining(int noteNumber)
+{
+    return isPlaying.test(noteNumber) && !keyDown.test(noteNumber);
+}
+
+bool SustainPedalLogic::isAnyNotePlaying(int lokey, int hikey)
+{
+    for (int i = lokey; i <= hikey; i++)
+        if (isPlaying.test(i)) return true;
+    return false;
+}
+
+bool SustainPedalLogic::isAnyNoteSustaining(int lokey, int hikey)
+{
+    for (int i = lokey; i <= hikey; i++)
+        if (isPlaying.test(i) && !keyDown.test(i)) return true;
+    return false;
+}
+
+bool SustainPedalLogic::isAnyKeyDown(int lokey, int hikey)
+{
+    for (int i = lokey; i <= hikey; i++) {
+        if (keyDown[i] != 0) {
+            return true;
         }
-        keyDown[noteNumber] = false;
-        return noteShouldStop;
     }
-    
-    void SustainPedalLogic::pedalDown() { pedalIsDown = true; }
-    
-    void SustainPedalLogic::pedalUp() { pedalIsDown = false; }
-    
-    bool SustainPedalLogic::isNoteSustaining(unsigned noteNumber)
-    {
-        return isPlaying[noteNumber] && !keyDown[noteNumber];
-    }
+    return false;
+}
 
-    bool SustainPedalLogic::isAnyKeyDown()
-    {
-        for (int i = 0; i < kMidiNoteNumbers; i++) if (keyDown[i]) return true;
-        return false;
-    }
+bool SustainPedalLogic::getAllNotesDown(Array<int>& outNotes)
+{
+    outNotes.clear();
+    for (int i = 0; i < kMidiNoteNumbers; i++) if (keyDown.test(i)) outNotes.add(i);
+    return !outNotes.isEmpty();
+}
 
-    int SustainPedalLogic::firstKeyDown()
-    {
-        for (int i = 0; i < kMidiNoteNumbers; i++) if (keyDown[i]) return i;
-        return -1;
-    }
+bool SustainPedalLogic::getAllNotesPlaying(Array<int>& outNotes)
+{
+    outNotes.clear();
+    for (int i = 0; i < kMidiNoteNumbers; i++) if (isPlaying.test(i)) outNotes.add(i);
+    return !outNotes.isEmpty();
+}
+
+
+bool MultiChannelSustainPedalLogic::isPedalDown()
+{
+    for (int chIdx = 0; chIdx < kMidiChannels; chIdx++)
+        if (logic[chIdx].isPedalDown()) return true;
+    return false;
+}
+
+bool MultiChannelSustainPedalLogic::isAnyKeyDown(int lokey, int hikey)
+{
+    for (int chIdx = 0; chIdx < kMidiChannels; chIdx++)
+        if (logic[chIdx].isAnyKeyDown(lokey, hikey)) return true;
+    return false;
+}
+
+bool MultiChannelSustainPedalLogic::isAnyNoteSustaining(int lokey, int hikey)
+{
+    for (int chIdx = 0; chIdx < kMidiChannels; chIdx++)
+        if (logic[chIdx].isAnyNoteSustaining(lokey, hikey)) return true;
+    return false;
 }
