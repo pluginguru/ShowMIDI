@@ -52,6 +52,7 @@ void MidiCcSlider::mouseDown(const MouseEvent& evt)
                 repaint();
             }
             });
+        return;
     }
 
     // Initial click on a slider also sets value

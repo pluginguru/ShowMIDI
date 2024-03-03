@@ -27,7 +27,7 @@ private:
     MidiMessageFifo& midiFifo;
     
     MyMidiKeyboardComponent keyboardComponent;
-    BooleanIndicator pedalIndicator;
+    TogglingBooleanIndicator pedalIndicator;
     MidiPitchSlider pitchSlider;
     MidiCcSlider ccSlider1, ccSlider2, ccSlider3, ccSlider4;
 

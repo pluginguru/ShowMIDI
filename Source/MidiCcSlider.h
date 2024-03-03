@@ -20,7 +20,7 @@ public:
 	void setValue(float v);
     std::function<void(float)> onValueChange;
 
-private:
+protected:
     Colour colour;
     int& inputCc;
     int& outputCc;

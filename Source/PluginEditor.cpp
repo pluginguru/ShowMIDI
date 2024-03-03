@@ -57,6 +57,13 @@ ShowMidiEditor::ShowMidiEditor (ShowMidiProcessor& p, MyMidiKeyboardState& keybo
 
     addAndMakeVisible(pedalIndicator);
     pedalIndicator.setValue(processor.sustainPedalDown);
+    pedalIndicator.onValueChange = [this](bool down)
+        {
+            if (down)
+                midiFifo.add(MidiMessage::controllerEvent(1, 64, 127));
+            else
+                midiFifo.add(MidiMessage::controllerEvent(1, 64, 0));
+        };
 
     addAndMakeVisible(keyboardButton);
     keyboardButton.setButtonText(String(processor.keyCount));

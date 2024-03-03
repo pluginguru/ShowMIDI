@@ -13,3 +13,12 @@ void BooleanIndicator::setValue(bool v)
     value = v;
 	repaint();
 }
+
+void TogglingBooleanIndicator::mouseUp(const MouseEvent&)
+{
+    if (!isMouseOver()) return;
+
+    value = !value;
+    repaint();
+    if (onValueChange) onValueChange(value);
+}

@@ -1,6 +1,5 @@
 #pragma once
-
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 class BooleanIndicator	: public Component
 {
@@ -14,6 +13,18 @@ public:
 	// BooleanIndicator
 	void setValue(bool v);
 
-private:
+protected:
 	bool value;
+};
+
+class TogglingBooleanIndicator : public BooleanIndicator
+{
+public:
+	TogglingBooleanIndicator() : BooleanIndicator() {}
+
+	// Component
+	void mouseUp(const MouseEvent&) override;
+
+	// BooleanIndicator
+	std::function<void(bool)> onValueChange;
 };
