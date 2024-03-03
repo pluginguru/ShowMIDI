@@ -10,8 +10,8 @@ ShowMidiEditor::ShowMidiEditor (ShowMidiProcessor& p, MyMidiKeyboardState& keybo
     , ccSlider2(Colours::greenyellow, p.cc2)
     , ccSlider3(Colours::cyan, p.cc3)
     , ccSlider4(Colours::darkorange, p.cc4)
-    , ccCount(-1)
     , pedalDown(false)
+    , ccCount(-1)
 {
     addChildComponent(pitchSlider);
     pitchSlider.setValue(processor.pitchBend);
