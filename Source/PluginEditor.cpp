@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-ShowMidiEditor::ShowMidiEditor (ShowMidiProcessor& p, MidiKeyboardState& keyboardState)
+ShowMidiEditor::ShowMidiEditor (ShowMidiProcessor& p, MyMidiKeyboardState& keyboardState)
     : AudioProcessorEditor(&p)
     , processor(p)
     , keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)

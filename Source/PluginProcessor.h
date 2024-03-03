@@ -1,6 +1,6 @@
 #pragma once
 #include <JuceHeader.h>
-#include "SustainPedalLogic.h"
+#include "MyMidiKeyboardState.h"
 
 class ShowMidiProcessor : public AudioProcessor
                         , public ChangeBroadcaster
@@ -45,8 +45,7 @@ public:
     bool sustainPedalDown;
 
 protected:
-    MidiKeyboardState keyboardState;
-    SustainPedalLogic pedalLogic;
+    MyMidiKeyboardState keyboardState;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShowMidiProcessor)

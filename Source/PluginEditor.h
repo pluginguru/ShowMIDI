@@ -1,5 +1,4 @@
 #pragma once
-
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "UnidirectionalSlider.h"
@@ -7,11 +6,13 @@
 #include "BooleanIndicator.h"
 #include "MyMidiKeyboardComponent.h"
 
+class MyMidiKeyboardState;
+
 class ShowMidiEditor    : public AudioProcessorEditor
                         , public ChangeListener
 {
 public:
-    ShowMidiEditor (ShowMidiProcessor&, MidiKeyboardState&);
+    ShowMidiEditor (ShowMidiProcessor&, MyMidiKeyboardState&);
     ~ShowMidiEditor();
 
     // Component

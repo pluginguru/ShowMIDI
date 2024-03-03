@@ -12,7 +12,7 @@ AudioProcessorEditor* ShowMidiProcessor::createEditor()
 }
 
 ShowMidiProcessor::ShowMidiProcessor()
-    : AudioProcessor (BusesProperties())
+    : AudioProcessor(BusesProperties().withInput("Dummy Input", AudioChannelSet::stereo()))
 {
     keyCount = 61;
     ccCount = 2;
@@ -40,8 +40,10 @@ bool ShowMidiProcessor::isVST() const
            wrapperType == WrapperType::wrapperType_VST3;
 }
 
-void ShowMidiProcessor::processBlock (AudioBuffer<float>&, MidiBuffer& midi)
+void ShowMidiProcessor::processBlock (AudioBuffer<float>& audio, MidiBuffer& midi)
 {
+    keyboardState.processNextMidiBuffer(midi, 0, audio.getNumSamples(), true);
+
     for (auto md : midi)
     {
         auto msg = md.getMessage();
@@ -74,26 +76,6 @@ void ShowMidiProcessor::processBlock (AudioBuffer<float>&, MidiBuffer& midi)
         {
             sustainPedalDown = msg.getControllerValue() > 63.0f;
             sendChangeMessage();
-            if (sustainPedalDown) pedalLogic.pedalDown();
-            else
-            {
-                pedalLogic.pedalUp();
-                for (int nn = 0; nn < 128; nn++)
-                {
-                    if (pedalLogic.isNoteSustaining(nn))
-                        keyboardState.noteOff(msg.getChannel(), nn, 0);
-                }
-            }
-        }
-        else if (msg.isNoteOn())
-        {
-            pedalLogic.keyDownAction(msg.getNoteNumber());
-            keyboardState.noteOn(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity() / 127.0f);
-        }
-        else if (msg.isNoteOff())
-        {
-            if (pedalLogic.keyUpAction(msg.getNoteNumber()))
-                keyboardState.noteOff(msg.getChannel(), msg.getNoteNumber(), msg.getVelocity() / 127.0f);
         }
     }
 }

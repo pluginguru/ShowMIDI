@@ -15,8 +15,14 @@
             file="Source/BooleanIndicator.cpp"/>
       <FILE id="KpjNpB" name="BooleanIndicator.h" compile="0" resource="0"
             file="Source/BooleanIndicator.h"/>
+      <FILE id="plGb4n" name="MyMidiKeyboardComponent.cpp" compile="1" resource="0"
+            file="Source/MyMidiKeyboardComponent.cpp"/>
       <FILE id="wluBqj" name="MyMidiKeyboardComponent.h" compile="0" resource="0"
             file="Source/MyMidiKeyboardComponent.h"/>
+      <FILE id="YlLRKH" name="MyMidiKeyboardState.cpp" compile="1" resource="0"
+            file="Source/MyMidiKeyboardState.cpp"/>
+      <FILE id="CM9yIu" name="MyMidiKeyboardState.h" compile="0" resource="0"
+            file="Source/MyMidiKeyboardState.h"/>
       <FILE id="TpEhmX" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="HHraww" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
@@ -24,10 +30,6 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="DFR52u" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="vYedGi" name="SustainPedalLogic.cpp" compile="1" resource="0"
-            file="Source/SustainPedalLogic.cpp"/>
-      <FILE id="siWDOY" name="SustainPedalLogic.h" compile="0" resource="0"
-            file="Source/SustainPedalLogic.h"/>
       <FILE id="QMkksk" name="UnidirectionalSlider.cpp" compile="1" resource="0"
             file="Source/UnidirectionalSlider.cpp"/>
       <FILE id="cxZsQQ" name="UnidirectionalSlider.h" compile="0" resource="0"
