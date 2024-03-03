@@ -7,10 +7,10 @@
               reportAppUsage="0" displaySplashScreen="0" jucerFormatVersion="1">
   <MAINGROUP id="oYQ3GO" name="ShowMIDI">
     <GROUP id="{C53FD417-9AA1-3BDF-D69C-6C7D69B5CA84}" name="Source">
-      <FILE id="SV2Eur" name="BidirectionalSlider.cpp" compile="1" resource="0"
-            file="Source/BidirectionalSlider.cpp"/>
-      <FILE id="Gz6ELu" name="BidirectionalSlider.h" compile="0" resource="0"
-            file="Source/BidirectionalSlider.h"/>
+      <FILE id="SV2Eur" name="MidiPitchSlider.cpp" compile="1" resource="0"
+            file="Source/MidiPitchSlider.cpp"/>
+      <FILE id="Gz6ELu" name="MidiPitchSlider.h" compile="0" resource="0"
+            file="Source/MidiPitchSlider.h"/>
       <FILE id="HEBPP6" name="BooleanIndicator.cpp" compile="1" resource="0"
             file="Source/BooleanIndicator.cpp"/>
       <FILE id="KpjNpB" name="BooleanIndicator.h" compile="0" resource="0"
@@ -30,10 +30,9 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="DFR52u" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="QMkksk" name="UnidirectionalSlider.cpp" compile="1" resource="0"
-            file="Source/UnidirectionalSlider.cpp"/>
-      <FILE id="cxZsQQ" name="UnidirectionalSlider.h" compile="0" resource="0"
-            file="Source/UnidirectionalSlider.h"/>
+      <FILE id="QMkksk" name="MidiCcSlider.cpp" compile="1" resource="0"
+            file="Source/MidiCcSlider.cpp"/>
+      <FILE id="cxZsQQ" name="MidiCcSlider.h" compile="0" resource="0" file="Source/MidiCcSlider.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

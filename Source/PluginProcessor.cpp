@@ -8,7 +8,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 AudioProcessorEditor* ShowMidiProcessor::createEditor()
 {
-    return new ShowMidiEditor(*this, keyboardState);
+    return new ShowMidiEditor(*this, keyboardState, midiFifo);
 }
 
 ShowMidiProcessor::ShowMidiProcessor()
@@ -25,11 +25,11 @@ ShowMidiProcessor::ShowMidiProcessor()
     lastUIHeight = 80;
 
     pitchBend = 0.0f;
-    modWheel = 0.0f;
+    cc1Value = 0.0f;
 
-    breathController = 0.0f;
-    footController = 0.0f;
-    softPedal = 0.0f;
+    cc2Value = 0.0f;
+    cc3Value = 0.0f;
+    cc4Value = 0.0f;
 
     sustainPedalDown = false;
 }
@@ -42,11 +42,18 @@ bool ShowMidiProcessor::isVST() const
 
 void ShowMidiProcessor::processBlock (AudioBuffer<float>& audio, MidiBuffer& midi)
 {
+    MidiMessage msg;
+    while (midiFifo.getNumReady())
+    {
+        midiFifo.read(msg);
+        midi.addEvent(msg, 0);
+    }
+
     keyboardState.processNextMidiBuffer(midi, 0, audio.getNumSamples(), true);
 
     for (auto md : midi)
     {
-        auto msg = md.getMessage();
+        msg = md.getMessage();
         if (msg.isPitchWheel())
         {
             pitchBend = float(msg.getPitchWheelValue() - 8192) / 8192.0f;
@@ -54,22 +61,22 @@ void ShowMidiProcessor::processBlock (AudioBuffer<float>& audio, MidiBuffer& mid
         }
         else if (msg.isControllerOfType(cc1))
         {
-            modWheel = msg.getControllerValue() / 127.0f;
+            cc1Value = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
         else if (msg.isControllerOfType(cc2))
         {
-            breathController = msg.getControllerValue() / 127.0f;
+            cc2Value = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
         else if (msg.isControllerOfType(cc3))
         {
-            footController = msg.getControllerValue() / 127.0f;
+            cc3Value = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
         else if (msg.isControllerOfType(cc4))
         {
-            softPedal = msg.getControllerValue() / 127.0f;
+            cc4Value = msg.getControllerValue() / 127.0f;
             sendChangeMessage();
         }
         else if (msg.isControllerOfType(64))

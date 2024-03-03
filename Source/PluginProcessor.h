@@ -2,6 +2,35 @@
 #include <JuceHeader.h>
 #include "MyMidiKeyboardState.h"
 
+struct MidiMessageFifo
+{
+    void add(MidiMessage msg)
+    {
+        int start1, size1, start2, size2;
+        abstractFifo.prepareToWrite(1, start1, size1, start2, size2);
+        if (size1 > 0) msgBuf[start1] = msg;
+        if (size2 > 0) msgBuf[start2] = msg;
+        abstractFifo.finishedWrite(size1 + size2);
+    }
+
+    int getNumReady()
+    {
+        return abstractFifo.getNumReady();
+    }
+
+    void read(MidiMessage& msg)
+    {
+        int start1, size1, start2, size2;
+        abstractFifo.prepareToRead(1, start1, size1, start2, size2);
+        if (size1 > 0) msg = msgBuf[start1];
+        if (size2 > 0) msg = msgBuf[start2];
+        abstractFifo.finishedRead(size1 + size2);
+    }
+
+    AbstractFifo abstractFifo{ 100 };
+    MidiMessage msgBuf[100];
+};
+
 class ShowMidiProcessor : public AudioProcessor
                         , public ChangeBroadcaster
 {
@@ -40,12 +69,12 @@ public:
     int cc1, cc2, cc3, cc4;
 
     float pitchBend;    // range -1.0 to +1.0, normal value 0.0
-    float modWheel;     // range 0.0 to 1.0
-    float breathController, footController, softPedal;
+    float cc1Value, cc2Value, cc3Value, cc4Value;     // range 0.0 to 1.0
     bool sustainPedalDown;
 
 protected:
     MyMidiKeyboardState keyboardState;
+    MidiMessageFifo midiFifo;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShowMidiProcessor)

@@ -1,11 +1,8 @@
-#include "UnidirectionalSlider.h"
+#include "MidiCcSlider.h"
 
-void UnidirectionalSlider::paint (Graphics& g)
+void MidiCcSlider::paint (Graphics& g)
 {
     auto area = getLocalBounds();
-
-    //g.setColour(Colours::black);
-    //g.fillRect(area);
 
     area.reduce(1, 1);
 
@@ -21,13 +18,13 @@ void UnidirectionalSlider::paint (Graphics& g)
     }
 
     g.setColour(colour.darker());
-    g.drawText(String(ccNumber), area.toFloat(), Justification::centredTop);
+    g.drawText(String(inputCc), area.toFloat(), Justification::centredTop);
 
     g.setColour(Colours::white);
     g.drawRect(area);
 }
 
-void UnidirectionalSlider::setValue(float v)
+void MidiCcSlider::setValue(float v)
 {
     value = v;
     if (value < 0.0f) value = 0.0f;
@@ -35,7 +32,7 @@ void UnidirectionalSlider::setValue(float v)
 	repaint();
 }
 
-void UnidirectionalSlider::mouseDown(const MouseEvent& evt)
+void MidiCcSlider::mouseDown(const MouseEvent& evt)
 {
     if (evt.mods.isRightButtonDown() || evt.mods.isCtrlDown())
     {
@@ -51,9 +48,34 @@ void UnidirectionalSlider::mouseDown(const MouseEvent& evt)
         menu.showMenuAsync(PopupMenu::Options(), [this](int id) {
             if (id)
             {
-                ccNumber = id - 1;
+                outputCc = inputCc = id - 1;
                 repaint();
             }
             });
     }
+
+    // Initial click on a slider also sets value
+    mouseDrag(evt);
+}
+
+void MidiCcSlider::mouseDrag(const MouseEvent& evt)
+{
+    float height = float(getHeight());
+    int mouseY = evt.getPosition().getY();
+    value = (height - mouseY) / height;
+    value = jlimit(0.0f, 1.0f, value);
+    if (onValueChange) onValueChange(value);
+    repaint();
+}
+
+void MidiCcSlider::mouseWheelMove(const MouseEvent&, const MouseWheelDetails& whd)
+{
+    float ninc = 0.0f;
+    if (whd.deltaY > 0.0f) ninc = 1.0f / 128;
+    else if (whd.deltaY < 0.0f) ninc = -1.0f / 128;
+    else return;
+
+    value = jlimit(0.0f, 1.0f, value + ninc);
+    if (onValueChange) onValueChange(value);
+    repaint();
 }

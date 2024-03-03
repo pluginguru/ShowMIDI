@@ -1,36 +1,62 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-ShowMidiEditor::ShowMidiEditor (ShowMidiProcessor& p, MyMidiKeyboardState& keyboardState)
+ShowMidiEditor::ShowMidiEditor (ShowMidiProcessor& p, MyMidiKeyboardState& keyboardState, MidiMessageFifo& fifo)
     : AudioProcessorEditor(&p)
     , processor(p)
+    , midiFifo(fifo)
     , keyboardComponent (keyboardState, MidiKeyboardComponent::horizontalKeyboard)
-    , modWheel(Colours::hotpink, p.cc1)
-    , breathController(Colours::greenyellow, p.cc2)
-    , footController(Colours::cyan, p.cc3)
-    , softPedal(Colours::darkorange, p.cc4)
+    , ccSlider1(Colours::hotpink, p.cc1)
+    , ccSlider2(Colours::greenyellow, p.cc2)
+    , ccSlider3(Colours::cyan, p.cc3)
+    , ccSlider4(Colours::darkorange, p.cc4)
     , ccCount(-1)
     , pedalDown(false)
 {
-    addChildComponent(pitchWheel);
-    pitchWheel.setValue(processor.pitchBend);
+    addChildComponent(pitchSlider);
+    pitchSlider.setValue(processor.pitchBend);
+    pitchSlider.onValueChange = [this](float v)
+        {
+            MidiMessage msg = MidiMessage::pitchWheel(1, int(8191.5f * (v + 1.0f)));
+            midiFifo.add(msg);
+        };
 
-    addChildComponent(modWheel);
-    modWheel.setValue(processor.modWheel);
+    addChildComponent(ccSlider1);
+    ccSlider1.setValue(processor.cc1Value);
+    ccSlider1.onValueChange = [this](float v)
+        {
+            MidiMessage msg = MidiMessage::controllerEvent(1, processor.cc1, int(127 * v + 0.5f));
+            midiFifo.add(msg);
+        };
 
-    addChildComponent(breathController);
-    breathController.setValue(processor.breathController);
+    addChildComponent(ccSlider2);
+    ccSlider2.setValue(processor.cc2Value);
+    ccSlider2.onValueChange = [this](float v)
+        {
+            MidiMessage msg = MidiMessage::controllerEvent(1, processor.cc2, int(127 * v + 0.5f));
+            midiFifo.add(msg);
+        };
 
-    addChildComponent(footController);
-    footController.setValue(processor.footController);
+    addChildComponent(ccSlider3);
+    ccSlider3.setValue(processor.cc3Value);
+    ccSlider3.onValueChange = [this](float v)
+        {
+            MidiMessage msg = MidiMessage::controllerEvent(1, processor.cc3, int(127 * v + 0.5f));
+            midiFifo.add(msg);
+        };
 
-    addChildComponent(softPedal);
-    softPedal.setValue(processor.softPedal);
+    addChildComponent(ccSlider4);
+    ccSlider4.setValue(processor.cc4Value);
+    ccSlider4.onValueChange = [this](float v)
+        {
+            MidiMessage msg = MidiMessage::controllerEvent(1, processor.cc4, int(127 * v + 0.5f));
+            midiFifo.add(msg);
+        };
 
     addAndMakeVisible(keyboardComponent);
 
-    addAndMakeVisible(sustainPedal);
-    sustainPedal.setValue(processor.sustainPedalDown);
+    addAndMakeVisible(pedalIndicator);
+    pedalIndicator.setValue(processor.sustainPedalDown);
 
     addAndMakeVisible(keyboardButton);
     keyboardButton.setButtonText(String(processor.keyCount));
@@ -104,11 +130,11 @@ void ShowMidiEditor::resized()
     if (processor.ccCount != ccCount)
     {
         ccCount = processor.ccCount;
-        pitchWheel.setVisible(ccCount >= 1);
-        modWheel.setVisible(ccCount >= 2);
-        breathController.setVisible(ccCount >= 3);
-        footController.setVisible(ccCount >= 4);
-        softPedal.setVisible(ccCount >= 5);
+        pitchSlider.setVisible(ccCount >= 1);
+        ccSlider1.setVisible(ccCount >= 2);
+        ccSlider2.setVisible(ccCount >= 3);
+        ccSlider3.setVisible(ccCount >= 4);
+        ccSlider4.setVisible(ccCount >= 5);
     }
 
     resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
@@ -116,11 +142,11 @@ void ShowMidiEditor::resized()
     processor.lastUIHeight = getHeight();
 
     auto area = getLocalBounds();
-    if (ccCount >= 1) pitchWheel.setBounds(area.removeFromLeft(sliderWidth));
-    if (ccCount >= 2) modWheel.setBounds(area.removeFromLeft(sliderWidth));
-    if (ccCount >= 3) breathController.setBounds(area.removeFromLeft(sliderWidth));
-    if (ccCount >= 4) footController.setBounds(area.removeFromLeft(sliderWidth));
-    if (ccCount >= 5) softPedal.setBounds(area.removeFromLeft(sliderWidth));
+    if (ccCount >= 1) pitchSlider.setBounds(area.removeFromLeft(sliderWidth));
+    if (ccCount >= 2) ccSlider1.setBounds(area.removeFromLeft(sliderWidth));
+    if (ccCount >= 3) ccSlider2.setBounds(area.removeFromLeft(sliderWidth));
+    if (ccCount >= 4) ccSlider3.setBounds(area.removeFromLeft(sliderWidth));
+    if (ccCount >= 5) ccSlider4.setBounds(area.removeFromLeft(sliderWidth));
     if (ccCount >= 1) area.removeFromLeft(3);
 
     auto buttonsArea = area.removeFromRight(buttonsWidth);
@@ -130,7 +156,7 @@ void ShowMidiEditor::resized()
     keyboardButton.setBounds(buttonsArea.removeFromTop(buttonHeight).reduced(2));
     ccButton.setBounds(buttonsArea.removeFromTop(buttonHeight).reduced(2));
 
-    sustainPedal.setBounds(area.removeFromBottom(6));
+    pedalIndicator.setBounds(area.removeFromBottom(6));
     area.removeFromBottom(2);
 
     keyboardComponent.setBounds(area);
@@ -187,15 +213,15 @@ void ShowMidiEditor::resized()
 
 void ShowMidiEditor::changeListenerCallback(ChangeBroadcaster*)
 {
-    sustainPedal.setValue(processor.sustainPedalDown);
+    pedalIndicator.setValue(processor.sustainPedalDown);
     if (processor.sustainPedalDown && !pedalDown) keyboardComponent.pedalDown();
     else if (!processor.sustainPedalDown && pedalDown) keyboardComponent.pedalUp();
     pedalDown = processor.sustainPedalDown;
 
-    pitchWheel.setValue(processor.pitchBend);
-    modWheel.setValue(processor.modWheel);
+    pitchSlider.setValue(processor.pitchBend);
+    ccSlider1.setValue(processor.cc1Value);
 
-    breathController.setValue(processor.breathController);
-    footController.setValue(processor.footController);
-    softPedal.setValue(processor.softPedal);
+    ccSlider2.setValue(processor.cc2Value);
+    ccSlider3.setValue(processor.cc3Value);
+    ccSlider4.setValue(processor.cc4Value);
 }

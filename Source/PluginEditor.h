@@ -1,8 +1,8 @@
 #pragma once
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "UnidirectionalSlider.h"
-#include "BidirectionalSlider.h"
+#include "MidiCcSlider.h"
+#include "MidiPitchSlider.h"
 #include "BooleanIndicator.h"
 #include "MyMidiKeyboardComponent.h"
 
@@ -12,7 +12,7 @@ class ShowMidiEditor    : public AudioProcessorEditor
                         , public ChangeListener
 {
 public:
-    ShowMidiEditor (ShowMidiProcessor&, MyMidiKeyboardState&);
+    ShowMidiEditor (ShowMidiProcessor&, MyMidiKeyboardState&, MidiMessageFifo&);
     ~ShowMidiEditor();
 
     // Component
@@ -24,12 +24,12 @@ public:
 
 private:
     ShowMidiProcessor& processor;
+    MidiMessageFifo& midiFifo;
     
     MyMidiKeyboardComponent keyboardComponent;
-    BooleanIndicator sustainPedal;
-    BidirectionalSlider pitchWheel;
-    UnidirectionalSlider modWheel;
-    UnidirectionalSlider breathController, footController, softPedal;
+    BooleanIndicator pedalIndicator;
+    MidiPitchSlider pitchSlider;
+    MidiCcSlider ccSlider1, ccSlider2, ccSlider3, ccSlider4;
 
     TextButton keyboardButton, ccButton;
 

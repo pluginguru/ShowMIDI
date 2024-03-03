@@ -1,12 +1,8 @@
-#include "BidirectionalSlider.h"
+#include "MidiPitchSlider.h"
 
-void BidirectionalSlider::paint (Graphics& g)
+void MidiPitchSlider::paint (Graphics& g)
 {
     auto area = getLocalBounds();
-
-    //g.setColour(Colours::black);
-    //g.fillRect(area);
-
     area.reduce(1, 1);
 
     if (value > 0.0f)
@@ -32,10 +28,31 @@ void BidirectionalSlider::paint (Graphics& g)
     g.drawRect(area);
 }
 
-void BidirectionalSlider::setValue(float v)
+void MidiPitchSlider::setValue(float v)
 {
 	value = v;
     if (value < -1.0f) value = -1.0f;
     if (value > 1.0f) value = 1.0f;
 	repaint();
+}
+
+void MidiPitchSlider::mouseDown(const MouseEvent&)
+{
+    clickValue = value;
+}
+
+void MidiPitchSlider::mouseDrag(const MouseEvent& evt)
+{
+    float halfHeight = 0.5f * getHeight();
+    value = clickValue - evt.getDistanceFromDragStartY() / halfHeight;
+    value = jlimit(-1.0f, 1.0f, value);
+    if (onValueChange) onValueChange(value);
+    repaint();
+}
+
+void MidiPitchSlider::mouseUp(const MouseEvent&)
+{
+    value = clickValue;
+    if (onValueChange) onValueChange(value);
+    repaint();
 }
