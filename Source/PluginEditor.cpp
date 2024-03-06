@@ -132,7 +132,8 @@ void ShowMidiEditor::resized()
 {
     const int buttonsWidth = 32;
     const int maxButtonHeight = 24;
-    int sliderWidth = 22;
+    const int minSliderWidth = 22;
+    const int maxSliderWidthGrowth = 16;
 
     if (processor.ccCount != ccCount)
     {
@@ -149,6 +150,13 @@ void ShowMidiEditor::resized()
     processor.lastUIHeight = getHeight();
 
     auto area = getLocalBounds();
+    float xScaleFactor = float(getWidth() - resizeLimits.getMinimumWidth())
+                       / (resizeLimits.getMaximumWidth() - resizeLimits.getMinimumWidth());
+    float yScaleFactor = float(getHeight() - resizeLimits.getMinimumHeight())
+                       / (resizeLimits.getMaximumHeight() - resizeLimits.getMinimumHeight());
+    float scaleFactor = fmax(xScaleFactor, yScaleFactor);
+    int sliderWidth = minSliderWidth + int(0.5f + scaleFactor * maxSliderWidthGrowth);
+
     if (ccCount >= 1) pitchSlider.setBounds(area.removeFromLeft(sliderWidth));
     if (ccCount >= 2) ccSlider1.setBounds(area.removeFromLeft(sliderWidth));
     if (ccCount >= 3) ccSlider2.setBounds(area.removeFromLeft(sliderWidth));
