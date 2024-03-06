@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT name="ShowMIDI" companyName="JUCE" version="1.4.0" userNotes="Keyboard monitoring audio plugin."
+<JUCERPROJECT name="ShowMIDI" companyName="JUCE" version="1.4.1" userNotes="Keyboard monitoring audio plugin."
               companyWebsite="http://juce.com" projectType="audioplug" pluginManufacturer="Shane Dunne"
               pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" pluginCharacteristicsValue="pluginIsMidiEffectPlugin"
               id="sg2UQw" pluginManufacturerCode="DunA" pluginCode="Smdi" aaxIdentifier="com.getdunne.ShowMIDI"
