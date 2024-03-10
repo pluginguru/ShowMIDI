@@ -12,7 +12,7 @@ AudioProcessorEditor* ShowMidiProcessor::createEditor()
 }
 
 ShowMidiProcessor::ShowMidiProcessor()
-    : AudioProcessor(BusesProperties().withInput("Dummy Input", AudioChannelSet::stereo()))
+    : AudioProcessor(BusesProperties().withOutput("Dummy Output", AudioChannelSet::stereo()))
 {
     keyCount = 61;
     ccCount = 2;

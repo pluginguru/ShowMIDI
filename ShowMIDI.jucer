@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT name="ShowMIDI" companyName="JUCE" version="1.4.1" userNotes="Keyboard monitoring audio plugin."
+<JUCERPROJECT name="ShowMIDI" companyName="JUCE" version="1.4.2" userNotes="Keyboard monitoring audio plugin."
               companyWebsite="http://juce.com" projectType="audioplug" pluginManufacturer="Shane Dunne"
-              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" pluginCharacteristicsValue="pluginIsMidiEffectPlugin"
+              pluginFormats="buildAU,buildStandalone,buildVST,buildVST3" pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
               id="sg2UQw" pluginManufacturerCode="DunA" pluginCode="Smdi" aaxIdentifier="com.getdunne.ShowMIDI"
               reportAppUsage="0" displaySplashScreen="0" jucerFormatVersion="1">
   <MAINGROUP id="oYQ3GO" name="ShowMIDI">
